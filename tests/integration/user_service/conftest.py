@@ -1,8 +1,8 @@
 from datetime import datetime
 
 import pytest
-from app.core.containers import Container
 
+from app.core.containers import Container
 from app.entities.user import UserEntity
 from tests.integration.user_service.dataset import users_data
 from tests.integration.utils.db.db_seeder import DbTestDataHandler
@@ -21,10 +21,7 @@ async def prepare_db_data(db_client):
     # restore_db.add_entity_info(Users, entity_data)
 
     await restore_db.clear_database()
-    # run_migrations("migrations", core_config.db_url_test)  # TODO
     await restore_db.seed_database()
-    # restart_index(engine=restore_db.engine)  # TODO check if needed
-    # await asyncio.sleep(1)  # TODO check if needed
     yield
     await restore_db.clear_database()
 

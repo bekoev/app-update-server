@@ -1,4 +1,4 @@
-# [TODO: Change to a specific name] Backend App
+# TGClient Update Service Backend App
 
 ## Dev environment
 

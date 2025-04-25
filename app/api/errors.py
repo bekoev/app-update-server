@@ -1,7 +1,5 @@
 from fastapi import HTTPException, status
 
-# TODO Remove Error-s that are unnecessary in the boilerplate
-
 
 class ApiNotFoundError(HTTPException):
     def __init__(self):

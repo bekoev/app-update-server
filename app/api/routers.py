@@ -4,8 +4,7 @@ from app.routers.user_route import user_router
 
 
 router = APIRouter(
-    # TODO: Change template to a specific name
-    tags=["template-backend"],
+    tags=["app-update-service"],
 )
 
 
