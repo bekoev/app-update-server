@@ -1,8 +1,8 @@
 services:
-  app:  
+  app:
     build:
         context: .
-    container_name: app
+    container_name: app-update-service
     restart: "no"
     env_file:
       - .env
@@ -10,7 +10,7 @@ services:
       - 8080:8080
   postgresql:
     image: postgres:14.4
-    container_name: postgresql
+    container_name: app-update-service-postgresql
     restart: "no"
     environment:
       POSTGRES_USER: user
@@ -21,7 +21,7 @@ services:
 
   adminer:
     image: adminer:4.8.1
-    container_name: postgresql_adminer
+    container_name: app-update-service-adminer
     restart: "no"
     environment:
       ADMINER_DEFAULT_SERVER: postgresql
