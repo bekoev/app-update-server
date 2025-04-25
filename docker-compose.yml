@@ -1,0 +1,30 @@
+services:
+  app:  
+    build:
+        context: .
+    container_name: app
+    restart: "no"
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+  postgresql:
+    image: postgres:14.4
+    container_name: postgresql
+    restart: "no"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: postgresql_adminer
+    restart: "no"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgresql
+      ADMINER_DESIGN: brade
+    ports:
+      - 10000:8080
