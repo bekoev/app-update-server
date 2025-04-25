@@ -18,6 +18,7 @@ dependencies = [
   "alembic",
   "sqlalchemy",
   "async-sqlalchemy",
+  "python-multipart>=0.0.20",
 ]
 
 [dependency-groups]
