@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     Note: Make sure that startup and shutdown are called on
           the same object, e.g. a singleton instance.
     """
-    container: Container = app.state.container
+    # container: Container = app.state.container
 
     yield
     # Clean up
