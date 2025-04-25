@@ -4,15 +4,12 @@
 
 ### Before the very first use
 
-* If you have cloned the existing repo (not generated the repo yourself):
-    ```
+* ```
     # install uv
     uv sync
     uv tool run pre-commit install
     ```
 * In IDE, do not forget to select the environment from `.venv`
-* `docker-compose up -d --build`
-* `alembic revision --autogenerate -m "Initial revision"`
 
 ### Running the application (non-containerized)
 `python -m app`
