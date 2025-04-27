@@ -1,8 +1,11 @@
+from typing import Annotated
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 
 from app.core.containers import Container, inject_module
 from app.models.update_manifest import UpdateManifest
+from app.routers.auth_validation import check_client_app_access
 from app.services.update_manifest.service import UpdateManifestService
 
 inject_module(__name__)
@@ -17,11 +20,11 @@ update_manifest_router = APIRouter(
 @update_manifest_router.get("/update-manifest")
 @inject
 async def get_update_manifest(
+    auth_token: Annotated[str, Depends(check_client_app_access)],
     update_manifest_service: UpdateManifestService = Depends(
         Provide[Container.update_manifest_service]
     ),
 ) -> UpdateManifest:
-    # TODO: Check access by a header
     return await update_manifest_service.get()
 
 

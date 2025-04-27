@@ -6,6 +6,7 @@ from app.plugins.logger.logging_config import init_logging
 from app.plugins.logger.settings import LoggerSettings
 from app.plugins.postgres.plugin import PostgresPlugin
 from app.plugins.postgres.settings import PostgresSettings
+from app.services.auth.auth_service import AuthService
 from app.services.update_files.service import UpdateFileService
 from app.services.update_files.storage.repository_inmemory import UpdateFileRepository
 from app.services.update_manifest.service import UpdateManifestService
@@ -34,6 +35,12 @@ class Container(containers.DeclarativeContainer):
         logger=logger,
         config=config.provided.db,
     )
+
+    auth_service = providers.Factory(
+        AuthService,
+        config=config.provided.app,
+    )
+
     user_repository = providers.Factory(
         UserRepository,
         db_session=db.provided.session,

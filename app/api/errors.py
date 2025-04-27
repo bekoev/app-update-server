@@ -42,3 +42,9 @@ class EntityNotFound(HTTPException):
 class MissDataError(WrongDataError):
     def __init__(self, loc):
         super().__init__(loc=loc)
+
+
+class ApiUnauthorizedError(HTTPException):
+    def __init__(self, message: str | None = None):
+        self.status_code = status.HTTP_401_UNAUTHORIZED
+        self.detail = message if message else "unauthorized"
