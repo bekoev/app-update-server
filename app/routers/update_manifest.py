@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from app.core.containers import Container, inject_module
 from app.models.update_manifest import UpdateManifest
@@ -21,11 +21,12 @@ update_manifest_router = APIRouter(
 @inject
 async def get_update_manifest(
     auth_token: Annotated[str, Depends(check_client_app_access)],
+    current_version: Annotated[str | None, Query(alias="currentVersion")] = None,
     update_manifest_service: UpdateManifestService = Depends(
         Provide[Container.update_manifest_service]
     ),
 ) -> UpdateManifest:
-    return await update_manifest_service.get()
+    return await update_manifest_service.get(current_version)
 
 
 @update_manifest_router.post("/update-manifest", status_code=status.HTTP_204_NO_CONTENT)

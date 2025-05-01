@@ -1,4 +1,3 @@
-from app.api.errors import ApiNotFoundError
 from app.models.update_manifest import UpdateManifest
 from app.services.update_manifest.storage.interface import (
     UpdateManifestRepositoryInterface,
@@ -12,7 +11,7 @@ class UpdateManifestRepository(UpdateManifestRepositoryInterface):
         global manifest
         manifest = new_manifest
 
-    async def get(self) -> UpdateManifest:
+    async def get(self) -> UpdateManifest | None:
         if manifest is None:
-            raise ApiNotFoundError
+            return None
         return manifest.model_copy(deep=True)

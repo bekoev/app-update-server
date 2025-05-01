@@ -19,6 +19,7 @@ dependencies = [
   "sqlalchemy",
   "async-sqlalchemy",
   "python-multipart>=0.0.20",
+  "packaging>=25.0",
 ]
 
 [dependency-groups]

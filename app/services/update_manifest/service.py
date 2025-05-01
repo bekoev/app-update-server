@@ -1,5 +1,8 @@
 from logging import Logger
 
+from packaging.version import InvalidVersion, Version
+
+from app.api.errors import ApiNotFoundError, WrongDataError
 from app.models.update_manifest import UpdateManifest
 from app.services.update_manifest.storage.interface import (
     UpdateManifestRepositoryInterface,
@@ -16,7 +19,23 @@ class UpdateManifestService:
         self.logger = logger
 
     async def set(self, manifest: UpdateManifest) -> None:
-        return await self.repository.set(manifest)
+        try:
+            new_version = Version(manifest.version)
+        except InvalidVersion:
+            raise WrongDataError(loc="version", message="Invalid version")
 
-    async def get(self) -> UpdateManifest:
-        return await self.repository.get()
+        current_manifest = await self.repository.get()
+
+        if not current_manifest or Version(current_manifest.version) < new_version:
+            await self.repository.set(manifest)
+
+    async def get(self, current_version: str | None) -> UpdateManifest:
+        current_manifest = await self.repository.get()
+        if not current_manifest:
+            raise ApiNotFoundError
+
+        manifest_version = Version(current_manifest.version)
+        if current_version and manifest_version <= Version(current_version):
+            raise ApiNotFoundError
+
+        return current_manifest
