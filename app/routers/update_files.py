@@ -11,12 +11,12 @@ inject_module(__name__)
 
 
 update_files_router = APIRouter(
-    tags=["update-files"],
+    tags=["development"],
     responses={404: {"messages": "Not found"}},
 )
 
 
-@update_files_router.get("/update-files")
+@update_files_router.get("/dev/update-files")
 @inject
 async def get_update_file_infos(
     update_file_service: UpdateFileService = Depends(
@@ -26,7 +26,7 @@ async def get_update_file_infos(
     return await update_file_service.get_all_ids()
 
 
-@update_files_router.get("/update-files/{id}")
+@update_files_router.get("/dev/update-files/{id}")
 @inject
 async def get_update_file(
     id: UUID,
@@ -40,7 +40,7 @@ async def get_update_file(
     )
 
 
-@update_files_router.post("/update-files")
+@update_files_router.post("/dev/update-files")
 @inject
 async def upload_update_file(
     file: UploadFile,

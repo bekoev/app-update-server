@@ -12,12 +12,14 @@ inject_module(__name__)
 
 
 update_manifest_router = APIRouter(
-    tags=["update-files"],
     responses={404: {"messages": "Not found"}},
 )
 
 
-@update_manifest_router.get("/update-manifest")
+@update_manifest_router.get(
+    "/update-manifest",
+    tags=["update-manifest"],
+)
 @inject
 async def get_update_manifest(
     auth_token: Annotated[str, Depends(check_client_app_access)],
@@ -29,7 +31,11 @@ async def get_update_manifest(
     return await update_manifest_service.get(current_version)
 
 
-@update_manifest_router.post("/update-manifest", status_code=status.HTTP_204_NO_CONTENT)
+@update_manifest_router.post(
+    "/dev/update-manifest",
+    tags=["development"],
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 @inject
 async def set_update_manifest(
     manifest: UpdateManifest,

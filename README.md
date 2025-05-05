@@ -11,6 +11,10 @@
     ```
 * In IDE, do not forget to select the environment from `.venv`
 
+### Setting application parameters
+* Copy .env.example to .env
+* Set the app_api_key variable to the value corresponging to api_token from TGClient's settings.ini (excluding the "Bearer " prefix).
+
 ### Running the application (non-containerized)
 `python -m app`
 
