@@ -10,13 +10,13 @@ inject_module(__name__)
 
 
 user_router = APIRouter(
-    tags=["user"],
+    tags=["development"],
     responses={404: {"messages": "Not found"}},
 )
 
 
 @user_router.get(
-    "/users",
+    "/dev/users",
     response_model=list[User],
 )
 @inject

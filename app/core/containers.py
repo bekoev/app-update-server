@@ -6,6 +6,13 @@ from app.plugins.logger.logging_config import init_logging
 from app.plugins.logger.settings import LoggerSettings
 from app.plugins.postgres.plugin import PostgresPlugin
 from app.plugins.postgres.settings import PostgresSettings
+from app.services.auth.auth_service import AuthService
+from app.services.update_files.service import UpdateFileService
+from app.services.update_files.storage.repository_inmemory import UpdateFileRepository
+from app.services.update_manifest.service import UpdateManifestService
+from app.services.update_manifest.storage.repository_inmemory import (
+    UpdateManifestRepository,
+)
 from app.services.user.user_repository import UserRepository
 from app.services.user.user_service import UserService
 from app.settings import AppSettings, MainSettings
@@ -28,6 +35,12 @@ class Container(containers.DeclarativeContainer):
         logger=logger,
         config=config.provided.db,
     )
+
+    auth_service = providers.Factory(
+        AuthService,
+        config=config.provided.app,
+    )
+
     user_repository = providers.Factory(
         UserRepository,
         db_session=db.provided.session,
@@ -37,6 +50,24 @@ class Container(containers.DeclarativeContainer):
     user_service = providers.Factory(
         UserService,
         repository=user_repository,
+        logger=logger,
+    )
+
+    update_file_repository = providers.Factory(
+        UpdateFileRepository,
+    )
+    update_file_service = providers.Factory(
+        UpdateFileService,
+        repository=update_file_repository,
+        logger=logger,
+    )
+
+    update_manifest_repository = providers.Factory(
+        UpdateManifestRepository,
+    )
+    update_manifest_service = providers.Factory(
+        UpdateManifestService,
+        repository=update_manifest_repository,
         logger=logger,
     )
 

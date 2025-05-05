@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from app.plugins.logger.settings import LoggerSettings
 from app.plugins.postgres.settings import PostgresSettings
 
@@ -14,6 +15,7 @@ class AppSettings(BaseSettings):
     developer_router: bool = True
     root_path: str = ""
     openapi_url: str = "/openapi.json"
+    api_key: str = "its_auth_key"
 
     model_config = SettingsConfigDict(
         env_prefix="app_",
