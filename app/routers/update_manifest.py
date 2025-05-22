@@ -25,7 +25,7 @@ update_manifest_router = APIRouter(
 @inject
 async def get_update_manifest(
     auth_token: Annotated[str, Depends(check_access_by_crm_token)],
-    current_version: Annotated[str | None, Query(alias="currentVersion")] = None,
+    current_version: Annotated[str, Query(alias="currentVersion")],
     update_manifest_service: UpdateManifestService = Depends(
         Provide[Container.update_manifest_service]
     ),
