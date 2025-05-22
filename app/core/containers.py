@@ -15,8 +15,6 @@ from app.services.update_manifest.service import UpdateManifestService
 from app.services.update_manifest.storage.repository_inmemory import (
     UpdateManifestRepository,
 )
-from app.services.user.user_repository import UserRepository
-from app.services.user.user_service import UserService
 from app.settings import AppSettings, MainSettings
 
 
@@ -50,18 +48,6 @@ class Container(containers.DeclarativeContainer):
         AuthService,
         config=config.provided.app,
         crm_client=crm_client,
-    )
-
-    user_repository = providers.Factory(
-        UserRepository,
-        db_session=db.provided.session,
-        logger=logger,
-    )
-
-    user_service = providers.Factory(
-        UserService,
-        repository=user_repository,
-        logger=logger,
     )
 
     update_file_repository = providers.Factory(
