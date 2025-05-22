@@ -51,7 +51,7 @@ def create_app(container: Container):
         health_checks=[container.db()],
         version=app_config.version,
     )
-    app.include_router(hc_router, prefix="/app")
+    app.include_router(hc_router, prefix="/service")
     app.state.container = container
 
     return app

@@ -3,10 +3,11 @@ from functools import partial
 from time import time
 from typing import Iterable, Optional
 
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends
 from pydantic import BaseModel, Field, RootModel
 
 from app.plugins.base.plugin import Plugin
+from app.routers.auth_validation import check_access_by_api_key
 
 
 class RootResponseSchema(BaseModel):
@@ -53,13 +54,14 @@ def create_health_router(
     version: Optional[str],
     health_checks: Iterable[Plugin],
 ) -> APIRouter:
-    router = APIRouter(tags=["Health Check"])
+    router = APIRouter(tags=["health-checks"])
     router.add_api_route(
         "/info",
         endpoint=lambda: RootResponseSchema(name=title, version=version),
         summary="General service information",
         response_model=RootResponseSchema,
         operation_id="app_info",
+        dependencies=[Depends(check_access_by_api_key)],
     )
     router.add_api_route(
         "/ping",
@@ -67,6 +69,7 @@ def create_health_router(
         summary='"Pong" response',
         response_model=PingResponseSchema,
         operation_id="app_ping",
+        dependencies=[Depends(check_access_by_api_key)],
     )
     router.add_api_route(
         "/health",
@@ -74,5 +77,6 @@ def create_health_router(
         summary="Call health checks",
         response_model=HealthcheckResponseSchema,
         operation_id="app_health",
+        dependencies=[Depends(check_access_by_api_key)],
     )
     return router
