@@ -1,4 +1,3 @@
-from typing import Annotated
 from uuid import UUID
 
 from dependency_injector.wiring import Provide, inject
@@ -20,10 +19,10 @@ update_files_router = APIRouter(
 @update_files_router.get(
     "/service/update-files",
     tags=["service-operations"],
+    dependencies=[Depends(check_access_by_api_key)],
 )
 @inject
 async def get_update_file_infos(
-    auth_token: Annotated[str, Depends(check_access_by_api_key)],
     update_file_service: UpdateFileService = Depends(
         Provide[Container.update_file_service]
     ),
@@ -51,10 +50,10 @@ async def get_update_file(
 @update_files_router.post(
     "/service/update-files",
     tags=["service-operations"],
+    dependencies=[Depends(check_access_by_api_key)],
 )
 @inject
 async def upload_update_file(
-    auth_token: Annotated[str, Depends(check_access_by_api_key)],
     file: UploadFile,
     update_file_service: UpdateFileService = Depends(
         Provide[Container.update_file_service]

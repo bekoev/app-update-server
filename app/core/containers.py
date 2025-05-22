@@ -12,9 +12,7 @@ from app.services.crm.client import CRMClient
 from app.services.update_files.service import UpdateFileService
 from app.services.update_files.storage.repository_inmemory import UpdateFileRepository
 from app.services.update_manifest.service import UpdateManifestService
-from app.services.update_manifest.storage.repository_inmemory import (
-    UpdateManifestRepository,
-)
+from app.services.update_manifest.storage.repository import UpdateManifestRepositoryDB
 from app.settings import AppSettings, MainSettings
 
 
@@ -60,7 +58,9 @@ class Container(containers.DeclarativeContainer):
     )
 
     update_manifest_repository = providers.Factory(
-        UpdateManifestRepository,
+        UpdateManifestRepositoryDB,
+        db_session=db.provided.session,
+        logger=logger,
     )
     update_manifest_service = providers.Factory(
         UpdateManifestService,
