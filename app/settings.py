@@ -15,7 +15,8 @@ class AppSettings(BaseSettings):
     developer_router: bool = True
     root_path: str = ""
     openapi_url: str = "/openapi.json"
-    api_key: str = "its_auth_key"
+    api_key: str = ""
+    crm_url_base: str = ""
 
     model_config = SettingsConfigDict(
         env_prefix="app_",

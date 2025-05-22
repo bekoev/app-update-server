@@ -20,11 +20,11 @@ dependencies = [
   "async-sqlalchemy",
   "python-multipart>=0.0.20",
   "packaging>=25.0",
+  "httpx>=0.28.1",
 ]
 
 [dependency-groups]
 dev = [
-  "httpx",
   "mypy",
   "pre-commit",
   "pytest",

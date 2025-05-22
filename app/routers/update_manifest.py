@@ -5,7 +5,9 @@ from fastapi import APIRouter, Depends, Query, status
 
 from app.core.containers import Container, inject_module
 from app.models.update_manifest import UpdateManifest
-from app.routers.auth_validation import check_client_app_access
+from app.routers.auth_validation import (
+    check_access_by_crm_token,
+)
 from app.services.update_manifest.service import UpdateManifestService
 
 inject_module(__name__)
@@ -22,7 +24,7 @@ update_manifest_router = APIRouter(
 )
 @inject
 async def get_update_manifest(
-    auth_token: Annotated[str, Depends(check_client_app_access)],
+    auth_token: Annotated[str, Depends(check_access_by_crm_token)],
     current_version: Annotated[str | None, Query(alias="currentVersion")] = None,
     update_manifest_service: UpdateManifestService = Depends(
         Provide[Container.update_manifest_service]

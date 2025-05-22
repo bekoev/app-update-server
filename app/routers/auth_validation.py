@@ -13,10 +13,20 @@ security = HTTPBearer()
 
 
 @inject
-async def check_client_app_access(
+async def check_access_by_api_key(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
     auth_service: AuthService = Depends(Provide[Container.auth_service]),
 ) -> None:
-    await auth_service.check_client_app_access(
+    await auth_service.check_access_by_api_key(
+        credentials.scheme, credentials.credentials
+    )
+
+
+@inject
+async def check_access_by_crm_token(
+    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+    auth_service: AuthService = Depends(Provide[Container.auth_service]),
+) -> None:
+    await auth_service.check_access_by_crm_token(
         credentials.scheme, credentials.credentials
     )
