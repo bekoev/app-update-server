@@ -5,6 +5,8 @@ from pydantic import BaseModel
 
 
 class UpdateFileInfoToCreate(BaseModel):
+    name: str | None = None
+    size: int | None = None
     comment: str | None = None
 
 

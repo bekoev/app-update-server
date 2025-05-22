@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, String, func
+from sqlalchemy import DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.entities.base import EntityBase
@@ -16,4 +16,6 @@ class UpdateFileEntity(EntityBase):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
-    comment: Mapped[str] = mapped_column(String, nullable=True)
+    comment: Mapped[str] = mapped_column(nullable=True)
+    name: Mapped[str] = mapped_column(nullable=True)
+    size: Mapped[int] = mapped_column(nullable=True)

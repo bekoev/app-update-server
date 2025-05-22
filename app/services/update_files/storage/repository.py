@@ -24,7 +24,7 @@ class FileInfoRepository:
 
     async def create(self, new_file_info: UpdateFileInfoToCreate) -> UpdateFileInfo:
         async with self.db_session() as session:
-            db_object = UpdateFileEntity(comment=new_file_info.comment)
+            db_object = UpdateFileEntity(**new_file_info.model_dump())
             session.add(db_object)
             await session.commit()
             await session.refresh(db_object)

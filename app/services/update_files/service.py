@@ -20,10 +20,10 @@ class UpdateFileService:
         self.file_infos = file_info_repository
         self.logger = logger
 
-    async def create(
-        self, file: UploadFile, info: UpdateFileInfoToCreate
-    ) -> UpdateFileInfo:
-        created_info = await self.file_infos.create(info)
+    async def create(self, file: UploadFile, comment: str | None) -> UpdateFileInfo:
+        created_info = await self.file_infos.create(
+            UpdateFileInfoToCreate(name=file.filename, size=file.size, comment=comment)
+        )
         await self.blob_repository.create(id=created_info.id, file=file)
         return created_info
 

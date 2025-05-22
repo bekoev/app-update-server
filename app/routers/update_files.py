@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, UploadFile
 from fastapi.responses import StreamingResponse
 
 from app.core.containers import Container, inject_module
-from app.models.update_file import UpdateFileInfo, UpdateFileInfoToCreate
+from app.models.update_file import UpdateFileInfo
 from app.routers.auth_validation import check_access_by_api_key
 from app.services.update_files.service import UpdateFileService
 
@@ -61,6 +61,4 @@ async def upload_update_file(
         Provide[Container.update_file_service]
     ),
 ) -> UpdateFileInfo:
-    return await update_file_service.create(
-        file, UpdateFileInfoToCreate(comment=comment)
-    )
+    return await update_file_service.create(file, comment=comment)
