@@ -17,5 +17,5 @@ def add_routers(app: FastAPI):
 
 
 def _add_routers(app: FastAPI, routers: list[APIRouter]):
-    for rout in routers:
-        app.include_router(rout)
+    for router in routers:
+        app.include_router(router)
