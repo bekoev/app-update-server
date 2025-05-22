@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, UploadFile
 from fastapi.responses import StreamingResponse
 
 from app.core.containers import Container, inject_module
+from app.models.update_file import UpdateFileInfo, UpdateFileInfoToCreate
 from app.routers.auth_validation import check_access_by_api_key
 from app.services.update_files.service import UpdateFileService
 
@@ -26,8 +27,8 @@ async def get_update_file_infos(
     update_file_service: UpdateFileService = Depends(
         Provide[Container.update_file_service]
     ),
-) -> list[UUID]:
-    return await update_file_service.get_all_ids()
+) -> list[UpdateFileInfo]:
+    return await update_file_service.get_all_infos()
 
 
 @update_files_router.get(
@@ -42,7 +43,7 @@ async def get_update_file(
     ),
 ) -> StreamingResponse:
     return StreamingResponse(
-        await update_file_service.get_by_id(id),
+        await update_file_service.get_file_by_id(id),
         media_type="application/octet-stream",
     )
 
@@ -55,8 +56,11 @@ async def get_update_file(
 @inject
 async def upload_update_file(
     file: UploadFile,
+    comment: str | None = None,
     update_file_service: UpdateFileService = Depends(
         Provide[Container.update_file_service]
     ),
-) -> UUID:
-    return await update_file_service.create(file)
+) -> UpdateFileInfo:
+    return await update_file_service.create(
+        file, UpdateFileInfoToCreate(comment=comment)
+    )

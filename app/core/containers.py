@@ -10,7 +10,8 @@ from app.plugins.postgres.settings import PostgresSettings
 from app.services.auth.auth_service import AuthService
 from app.services.crm.client import CRMClient
 from app.services.update_files.service import UpdateFileService
-from app.services.update_files.storage.repository_inmemory import UpdateFileRepository
+from app.services.update_files.storage.repository import FileInfoRepository
+from app.services.update_files.storage.repository_inmemory import BLOBRepository
 from app.services.update_manifest.service import UpdateManifestService
 from app.services.update_manifest.storage.repository import UpdateManifestRepositoryDB
 from app.settings import AppSettings, MainSettings
@@ -49,11 +50,17 @@ class Container(containers.DeclarativeContainer):
     )
 
     update_file_repository = providers.Factory(
-        UpdateFileRepository,
+        BLOBRepository,
+    )
+    file_info_repository = providers.Factory(
+        FileInfoRepository,
+        db_session=db.provided.session,
+        logger=logger,
     )
     update_file_service = providers.Factory(
         UpdateFileService,
         repository=update_file_repository,
+        file_info_repository=file_info_repository,
         logger=logger,
     )
 
