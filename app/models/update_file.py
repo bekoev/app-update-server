@@ -1,7 +1,15 @@
 from datetime import datetime
+from typing import Annotated, Any
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, BeforeValidator, ConfigDict
+
+
+def str_from_uuid(value: Any) -> Any:
+    if isinstance(value, UUID):
+        return value.hex
+    else:
+        return value
 
 
 class UpdateFileInfoToCreate(BaseModel):
@@ -11,5 +19,7 @@ class UpdateFileInfoToCreate(BaseModel):
 
 
 class UpdateFileInfo(UpdateFileInfoToCreate):
-    id: UUID
+    model_config = ConfigDict(from_attributes=True)
+
+    id: Annotated[str, BeforeValidator(str_from_uuid)]
     created_at: datetime

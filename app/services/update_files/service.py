@@ -1,6 +1,5 @@
 from io import BytesIO
 from logging import Logger
-from uuid import UUID
 
 from fastapi import UploadFile
 
@@ -35,7 +34,7 @@ class UpdateFileService:
     async def get_all_infos(self) -> list[UpdateFileInfo]:
         return await self.file_infos.get_all()
 
-    async def get_file_by_id(self, object_id: UUID) -> BytesIO | None:
+    async def get_file_by_id(self, object_id: str) -> BytesIO:
         try:
             return await self.blob_repository.get_by_id(object_id)
         except FileNotFoundError:

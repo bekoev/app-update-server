@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi.responses import StreamingResponse
@@ -37,7 +35,7 @@ async def get_update_file_infos(
 )
 @inject
 async def get_update_file(
-    id: UUID,
+    id: str,
     update_file_service: UpdateFileService = Depends(
         Provide[Container.update_file_service]
     ),

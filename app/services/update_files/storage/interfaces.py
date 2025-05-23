@@ -1,16 +1,15 @@
 from abc import ABC, abstractmethod
 from io import BytesIO
-from uuid import UUID
 
 from fastapi import UploadFile
 
 
 class BLOBRepositoryInterface(ABC):
     @abstractmethod
-    async def create(self, object_id: UUID, file: UploadFile) -> None: ...
+    async def create(self, object_id: str, file: UploadFile) -> None: ...
 
     @abstractmethod
-    async def get_by_id(self, object_id: UUID) -> BytesIO: ...
+    async def get_by_id(self, object_id: str) -> BytesIO: ...
 
     @abstractmethod
-    async def delete_by_id(self, object_id: UUID) -> None: ...
+    async def delete_by_id(self, object_id: str) -> None: ...

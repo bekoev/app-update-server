@@ -1,6 +1,5 @@
 from io import BytesIO
 from pathlib import Path
-from uuid import UUID
 
 import aiofiles
 import aiofiles.os
@@ -17,21 +16,21 @@ class BLOBRepository(BLOBRepositoryInterface):
     ):
         self.storage_path = Path(config.file_storage_path)
 
-    async def create(self, object_id: UUID, file: UploadFile) -> None:
+    async def create(self, object_id: str, file: UploadFile) -> None:
         """Raises: OSError"""
 
-        async with aiofiles.open(self.storage_path / object_id.hex, mode="wb") as f:
+        async with aiofiles.open(self.storage_path / object_id, mode="wb") as f:
             # load the entire file into memory
             content = await file.read()
             await f.write(content)
 
-    async def get_by_id(self, object_id: UUID) -> BytesIO:
+    async def get_by_id(self, object_id: str) -> BytesIO:
         """Raises: FileNotFoundError and other OSError-based exceptions"""
 
-        async with aiofiles.open(self.storage_path / object_id.hex, mode="rb") as f:
+        async with aiofiles.open(self.storage_path / object_id, mode="rb") as f:
             # load the entire file into memory
             content = await f.read()
             return BytesIO(content)
 
-    async def delete_by_id(self, object_id: UUID) -> None:
-        await aiofiles.os.remove(self.storage_path / object_id.hex)
+    async def delete_by_id(self, object_id: str) -> None:
+        await aiofiles.os.remove(self.storage_path / object_id)
