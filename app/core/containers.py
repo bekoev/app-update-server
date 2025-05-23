@@ -62,6 +62,7 @@ class Container(containers.DeclarativeContainer):
         UpdateFileService,
         repository=update_file_repository,
         file_info_repository=file_info_repository,
+        config=config.provided.app,
         logger=logger,
     )
 

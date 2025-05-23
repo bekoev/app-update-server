@@ -18,6 +18,7 @@ class AppSettings(BaseSettings):
     api_key: str = ""
     crm_url_base: str = ""
     file_storage_path: str = ""
+    file_storage_capacity: int = 10
 
     model_config = SettingsConfigDict(
         env_prefix="app_",
