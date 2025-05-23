@@ -1,5 +1,5 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, status
 from fastapi.responses import StreamingResponse
 
 from app.core.containers import Container, inject_module
@@ -41,7 +41,7 @@ async def get_update_file(
     ),
 ) -> StreamingResponse:
     return StreamingResponse(
-        await update_file_service.get_file_by_id(id),
+        await update_file_service.get_file(id),
         media_type="application/octet-stream",
     )
 
@@ -60,3 +60,19 @@ async def upload_update_file(
     ),
 ) -> UpdateFileInfo:
     return await update_file_service.create(file, comment=comment)
+
+
+@update_files_router.delete(
+    "/update-files/{id}",
+    tags=["service-operations"],
+    dependencies=[Depends(check_access_by_api_key)],
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+@inject
+async def delete_update_file(
+    id: str,
+    update_file_service: UpdateFileService = Depends(
+        Provide[Container.update_file_service]
+    ),
+) -> None:
+    await update_file_service.delete_file(id)

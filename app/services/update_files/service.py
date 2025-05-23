@@ -34,8 +34,14 @@ class UpdateFileService:
     async def get_all_infos(self) -> list[UpdateFileInfo]:
         return await self.file_infos.get_all()
 
-    async def get_file_by_id(self, object_id: str) -> BytesIO:
+    async def get_file(self, object_id: str) -> BytesIO:
         try:
-            return await self.blob_repository.get_by_id(object_id)
+            return await self.blob_repository.get(object_id)
+        except FileNotFoundError:
+            raise ApiNotFoundError
+
+    async def delete_file(self, object_id: str) -> None:
+        try:
+            await self.blob_repository.delete(object_id)
         except FileNotFoundError:
             raise ApiNotFoundError

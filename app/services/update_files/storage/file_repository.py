@@ -24,7 +24,7 @@ class BLOBRepository(BLOBRepositoryInterface):
             content = await file.read()
             await f.write(content)
 
-    async def get_by_id(self, object_id: str) -> BytesIO:
+    async def get(self, object_id: str) -> BytesIO:
         """Raises: FileNotFoundError and other OSError-based exceptions"""
 
         async with aiofiles.open(self.storage_path / object_id, mode="rb") as f:
@@ -32,5 +32,5 @@ class BLOBRepository(BLOBRepositoryInterface):
             content = await f.read()
             return BytesIO(content)
 
-    async def delete_by_id(self, object_id: str) -> None:
+    async def delete(self, object_id: str) -> None:
         await aiofiles.os.remove(self.storage_path / object_id)
