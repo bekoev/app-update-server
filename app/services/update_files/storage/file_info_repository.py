@@ -4,7 +4,7 @@ from typing import Callable
 from uuid import UUID
 
 from pydantic import TypeAdapter
-from sqlalchemy import desc, select
+from sqlalchemy import delete, desc, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from app.entities.update_file import UpdateFileEntity
@@ -47,3 +47,9 @@ class FileInfoRepository:
             return TypeAdapter(list[UpdateFileInfo]).validate_python(
                 db_objects, from_attributes=True
             )
+
+    async def delete(self, id: UUID) -> None:
+        async with self.db_session() as session:
+            query = delete(UpdateFileEntity).filter_by(id=id)
+            await session.execute(query)
+            await session.commit()

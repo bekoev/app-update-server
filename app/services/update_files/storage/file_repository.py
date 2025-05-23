@@ -1,0 +1,37 @@
+from io import BytesIO
+from pathlib import Path
+from uuid import UUID
+
+import aiofiles
+import aiofiles.os
+from fastapi import UploadFile
+
+from app.services.update_files.storage.interfaces import BLOBRepositoryInterface
+from app.settings import AppSettings
+
+
+class BLOBRepository(BLOBRepositoryInterface):
+    def __init__(
+        self,
+        config: AppSettings,
+    ):
+        self.storage_path = Path(config.file_storage_path)
+
+    async def create(self, object_id: UUID, file: UploadFile) -> None:
+        """Raises: OSError"""
+
+        async with aiofiles.open(self.storage_path / object_id.hex, mode="wb") as f:
+            # load the entire file into memory
+            content = await file.read()
+            await f.write(content)
+
+    async def get_by_id(self, object_id: UUID) -> BytesIO:
+        """Raises: FileNotFoundError and other OSError-based exceptions"""
+
+        async with aiofiles.open(self.storage_path / object_id.hex, mode="rb") as f:
+            # load the entire file into memory
+            content = await f.read()
+            return BytesIO(content)
+
+    async def delete_by_id(self, object_id: UUID) -> None:
+        await aiofiles.os.remove(self.storage_path / object_id.hex)

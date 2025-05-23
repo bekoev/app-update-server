@@ -17,6 +17,7 @@ class AppSettings(BaseSettings):
     openapi_url: str = "/openapi.json"
     api_key: str = ""
     crm_url_base: str = ""
+    file_storage_path: str = ""
 
     model_config = SettingsConfigDict(
         env_prefix="app_",
