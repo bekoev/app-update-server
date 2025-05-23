@@ -39,3 +39,6 @@ class UpdateManifestService:
             raise ApiNotFoundError
 
         return current_manifest
+
+    async def delete(self) -> None:
+        await self.repository.delete()

@@ -48,3 +48,18 @@ async def set_update_manifest(
     ),
 ) -> None:
     await update_manifest_service.set(manifest)
+
+
+@update_manifest_router.delete(
+    "/service/update-manifest",
+    tags=["service-operations"],
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(check_access_by_api_key)],
+)
+@inject
+async def remove_update_manifest(
+    update_manifest_service: UpdateManifestService = Depends(
+        Provide[Container.update_manifest_service]
+    ),
+) -> None:
+    await update_manifest_service.delete()
