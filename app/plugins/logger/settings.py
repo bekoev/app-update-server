@@ -15,7 +15,6 @@ class LoggerSettings(BaseSettings):
     graylog_host: Optional[str] = None
     graylog_port: Optional[int] = None
     developer_logger: Optional[bool] = None
-    developer_mode: bool = False
     model_config = SettingsConfigDict(
         env_prefix="logger_",
         env_file=".env",
