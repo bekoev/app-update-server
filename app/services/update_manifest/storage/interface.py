@@ -9,3 +9,6 @@ class UpdateManifestRepositoryInterface(ABC):
 
     @abstractmethod
     async def get(self) -> UpdateManifest | None: ...
+
+    @abstractmethod
+    async def delete(self) -> None: ...

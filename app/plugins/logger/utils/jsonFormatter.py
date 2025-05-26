@@ -1,13 +1,10 @@
 import json
 from logging import Formatter
 
-from app.plugins.logger.models.loggerExtra import LoggerExtra
-
 fields_json_ordering = {
     "level": "levelname",
     "message": "message",
     "timestamp": "asctime",
-    **LoggerExtra.get_extra_fields(),
     "processName": "processName",
     "processID": "process",
     "threadName": "threadName",

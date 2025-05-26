@@ -20,14 +20,16 @@ dependencies = [
   "async-sqlalchemy",
   "python-multipart>=0.0.20",
   "packaging>=25.0",
+  "httpx>=0.28.1",
+  "aiofiles>=24.1.0",
 ]
 
 [dependency-groups]
 dev = [
-  "httpx",
   "mypy",
   "pre-commit",
   "pytest",
   "pytest-asyncio",
   "ruff",
+  "types-aiofiles>=24.1.0.20250516",
 ]
