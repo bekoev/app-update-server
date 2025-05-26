@@ -7,17 +7,16 @@ from app.plugins.postgres.settings import PostgresSettings
 class AppSettings(BaseSettings):
     """General settings app"""
 
-    name: str = "AppName"
+    name: str = "app-update-service"
     version: str = "0.0.0"
     host: str = "localhost"
     port: int = 8080
     reloader: bool = False
-    developer_router: bool = True
     root_path: str = ""
     openapi_url: str = "/openapi.json"
     api_key: str = ""
     crm_url_base: str = ""
-    file_storage_path: str = ""
+    file_storage_path: str = "/persistent/file_storage"
     file_storage_capacity: int = 10
 
     model_config = SettingsConfigDict(

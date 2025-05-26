@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+        context: .
+    container_name: app-update-service
+    restart: "no"
+    command: bash -c "alembic upgrade head && python -m app"
+    environment:
+      - app_host=0.0.0.0
+      - app_port=8080
+      - app_api_key=secret_key
+      - app_crm_url_base=http://host.docker.internal:8000
+      - postgres_host=postgresql
+      - postgres_port=5432
+      - postgres_user=user1
+      - postgres_password=password1
+      - postgres_db=update_service
+    volumes:
+      - /path/to/file_storage:/persistent/file_storage
+    ports:
+      - 8080:8080
+
+  postgresql:
+    image: postgres
+    container_name: app-update-service-postgresql
+    restart: "no"
+    environment:
+      POSTGRES_USER: user1
+      POSTGRES_PASSWORD: password1
+      POSTGRES_DB: update_service

@@ -1,4 +1,5 @@
 from io import BytesIO
+from logging import Logger
 from pathlib import Path
 
 import aiofiles
@@ -13,8 +14,10 @@ class BLOBRepository(BLOBRepositoryInterface):
     def __init__(
         self,
         config: AppSettings,
+        logger: Logger,
     ):
         self.storage_path = Path(config.file_storage_path)
+        self.logger = logger
 
     async def create(self, object_id: str, file: UploadFile) -> None:
         """Raises: OSError"""
@@ -22,6 +25,7 @@ class BLOBRepository(BLOBRepositoryInterface):
         async with aiofiles.open(self.storage_path / object_id, mode="wb") as f:
             # load the entire file into memory
             content = await file.read()
+            self.logger.debug(f"Writing {file.filename=}")
             await f.write(content)
 
     async def get(self, object_id: str) -> BytesIO:

@@ -42,16 +42,19 @@ class Container(containers.DeclarativeContainer):
         CRMClient,
         config=config.provided.app,
         http_client=crm_http_client,
+        logger=logger,
     )
     auth_service = providers.Factory(
         AuthService,
         config=config.provided.app,
         crm_client=crm_client,
+        logger=logger,
     )
 
     update_file_repository = providers.Factory(
         BLOBRepository,
         config=config.provided.app,
+        logger=logger,
     )
     file_info_repository = providers.Factory(
         FileInfoRepository,

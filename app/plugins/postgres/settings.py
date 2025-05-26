@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class PostgresSettings(BaseSettings):
     protocol: str = "postgresql+asyncpg"
-    host: str = "localhost"
+    host: str = "0.0.0.0"
     port: int = 5432
 
     user: str = "user"
