@@ -22,6 +22,9 @@ FROM python:3.12-slim
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
+RUN addgroup --gid $GROUP_ID nonroot && adduser --uid $USER_ID --ingroup nonroot nonroot
+RUN mkdir /persistent && mkdir /persistent/file_storage && chown -R nonroot:nonroot /persistent/file_storage
+
 WORKDIR /backend
 
 COPY --from=build /tmp/requirements.txt /backend/requirements.txt
@@ -30,8 +33,6 @@ COPY ./alembic.ini /backend/
 COPY ./migrations /backend/migrations
 COPY ./app /backend/app
 
-RUN addgroup --gid $GROUP_ID nonroot && adduser --uid $USER_ID --ingroup nonroot nonroot
-RUN mkdir /persistent && mkdir /persistent/file_storage && chown -R nonroot:nonroot /persistent/file_storage
 USER nonroot
 
 CMD ["python", "-m", "app"]
