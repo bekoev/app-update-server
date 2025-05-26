@@ -36,14 +36,14 @@
 
 ## Linting and unit testing
 
-* `docker build --tag "app-update-service-test" --target test .`
-* `docker run --rm "app-update-service-test" ruff check`
-* `docker run --rm "app-update-service-test" mypy app`
-* `docker run --rm "app-update-service-test" pytest tests/unit`
+* `docker build --tag app-update-service-test --target test .`
+* `docker run --rm app-update-service-test ruff check`
+* `docker run --rm app-update-service-test mypy app`
+* `docker run --rm app-update-service-test pytest tests/unit`
 
 ## Building
 
-* `docker build -t app-update-service .`
+* `docker build --tag app-update-service .`
 
 ## Running
 
@@ -63,5 +63,5 @@
 * Run database mirgations passing environment variables:
     * `docker run --env-file .env --rm app-update-service bash -c "alembic upgrade head"`
 * Run the application passing environment variables and mounting file storage to container's `/persistent/file_storage`:
-    * `docker run -d --env-file .env --network $NETWORK_NAME -p 8080:8080 -v /path/to/file_storage:/persistent/file_storage app-update-service`
+    * `docker run -d --env-file .env -p 8080:8080 -v /path/to/file_storage:/persistent/file_storage app-update-service`
 * For a docker compose example, see docker-compose-deploy-example.yml
