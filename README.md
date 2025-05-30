@@ -29,8 +29,8 @@
 3. Run `pytest` and make sure all tests are passing
 
 ### Running linters
-`ruff check`
-`mypy app`
+* `ruff check`
+* `mypy app`
 
 # Deployment
 
