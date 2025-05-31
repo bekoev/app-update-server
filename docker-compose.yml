@@ -27,8 +27,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: test
-    # ports:
-    #   - 5432:5432
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer
