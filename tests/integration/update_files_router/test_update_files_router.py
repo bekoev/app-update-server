@@ -134,6 +134,95 @@ async def test_upload_update_file_parametrized(
                 assert "id" in result
 
 
+@mock.patch("app.services.update_files.storage.file_repository.aiofiles.open")
+async def test_upload_file_when_capacity_reached(
+    mock_open, app_client: AsyncClient, app_config: AppSettings
+):
+    """Test that the oldest file is deleted when capacity is reached."""
+    # Mock the file operations
+    mock_file = mock.AsyncMock()
+    mock_file.__aenter__.return_value.write = mock.AsyncMock()
+    mock_open.return_value = mock_file
+
+    # Check current file count
+    headers = {"Authorization": f"Bearer {app_config.api_key}"}
+    response = await app_client.get("/service/update-files", headers=headers)
+    assert response.status_code == 200
+    current_files = response.json()
+
+    # If already at capacity, we can test the rotation, otherwise skip
+    capacity = app_config.file_storage_capacity
+    if len(current_files) < capacity:
+        # Upload files until we're at capacity
+        with mock.patch(
+            "app.services.update_files.storage.file_repository.Path.mkdir",
+            return_value=None,
+        ):
+            with mock.patch(
+                "app.services.update_files.storage.file_repository.Path.exists",
+                return_value=True,
+            ):
+                for i in range(capacity - len(current_files)):
+                    content = b"Test file content"
+                    file = io.BytesIO(content)
+
+                    response = await app_client.post(
+                        "/service/update-files",
+                        headers=headers,
+                        files={"file": (f"fill_capacity_{i}.bin", file)},
+                    )
+                    assert response.status_code == 200
+
+    # Get the current list of files (now at capacity)
+    response = await app_client.get("/service/update-files", headers=headers)
+    assert response.status_code == 200
+    files_at_capacity = response.json()
+    assert len(files_at_capacity) == capacity
+
+    # Sort files by creation date to find the oldest
+    sorted_files = sorted(files_at_capacity, key=lambda x: x["created_at"])
+    oldest_file_id = sorted_files[0]["id"]
+
+    # Upload a new file with remove mocked
+    with (
+        mock.patch(
+            "app.services.update_files.storage.file_repository.Path.mkdir",
+            return_value=None,
+        ),
+        mock.patch(
+            "app.services.update_files.storage.file_repository.Path.exists",
+            return_value=True,
+        ),
+        mock.patch(
+            "app.services.update_files.storage.file_repository.aiofiles.os.remove",
+            return_value=None,
+        ),
+    ):
+        content = b"New file that should trigger oldest deletion"
+        file = io.BytesIO(content)
+
+        response = await app_client.post(
+            "/service/update-files",
+            headers=headers,
+            files={"file": ("capacity_test.bin", file)},
+        )
+        assert response.status_code == 200
+        new_file_data = response.json()
+
+        # Check if the total count remains at capacity
+        response = await app_client.get("/service/update-files", headers=headers)
+        assert response.status_code == 200
+        updated_files = response.json()
+        assert len(updated_files) == capacity
+
+        # Check if the oldest file was deleted
+        file_ids = [f["id"] for f in updated_files]
+        assert oldest_file_id not in file_ids
+
+        # Verify the new file is in the list
+        assert new_file_data["id"] in file_ids
+
+
 async def test_upload_update_file_unauthorized(app_client: AsyncClient):
     """Test uploading a file without authorization."""
 
