@@ -33,13 +33,18 @@ class UpdateManifestService:
                 "Automatic version downgrade is not supported, remove current manifest explicitly"
             )
 
-    async def get(self, current_version: str | None) -> UpdateManifest:
+    async def get(self, requester_version: str) -> UpdateManifest:
+        try:
+            requester_version_obj = Version(requester_version)
+        except InvalidVersion:
+            raise WrongDataError(loc="current_version", message="Invalid version")
+
         current_manifest = await self.repository.get()
         if not current_manifest:
             raise ApiNotFoundError
 
         manifest_version = Version(current_manifest.version)
-        if current_version and manifest_version <= Version(current_version):
+        if requester_version_obj and manifest_version <= requester_version_obj:
             raise ApiNotFoundError
 
         return current_manifest

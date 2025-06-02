@@ -1,13 +1,15 @@
 import os
+from collections.abc import AsyncGenerator
 
 import httpx
 import pytest
 from dependency_injector import providers
 
 from app.api.server import create_app
-from app.core.containers import container
+from app.core.containers import Container, container
 from app.plugins.postgres.plugin import PostgresPlugin
 from app.plugins.postgres.settings import PostgresSettings
+from app.settings import AppSettings
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -31,12 +33,22 @@ def app():
 
 
 @pytest.fixture(scope="session")
-async def app_client(app):
+async def app_client(app) -> AsyncGenerator[httpx.AsyncClient]:
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://0.0.0.0") as ac:
         yield ac
 
 
-@pytest.fixture(scope="session")
-def db_client(app):
-    return container.db()
+@pytest.fixture()
+def app_container(app) -> Container:
+    return app.state.container
+
+
+@pytest.fixture()
+def db_client(app_container: Container) -> PostgresPlugin:
+    return app_container.db()
+
+
+@pytest.fixture()
+def app_config(app_container: Container) -> AppSettings:
+    return app_container.config().app

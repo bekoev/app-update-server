@@ -48,7 +48,11 @@ class FileInfoRepository:
             return TypeAdapter(list[UpdateFileInfo]).validate_python(db_objects)
 
     async def delete(self, id: str) -> None:
-        db_id = UUID(hex=id)
+        try:
+            db_id = UUID(hex=id)
+        except ValueError:
+            return
+
         async with self.db_session() as session:
             query = delete(UpdateFileEntity).filter_by(id=db_id)
             await session.execute(query)

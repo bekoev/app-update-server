@@ -19,6 +19,7 @@ services:
       - file_storage:/persistent/file_storage
     ports:
       - 8080:8080
+
   postgresql:
     image: postgres
     container_name: app-update-service-postgresql
@@ -27,8 +28,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: test
-    # ports:
-    #   - 5432:5432
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer

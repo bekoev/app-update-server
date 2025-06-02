@@ -1,5 +1,7 @@
+from typing import Annotated
+
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, UploadFile, status
+from fastapi import APIRouter, Depends, Form, UploadFile, status
 from fastapi.responses import StreamingResponse
 
 from app.core.containers import Container, inject_module
@@ -54,7 +56,7 @@ async def get_update_file(
 @inject
 async def upload_update_file(
     file: UploadFile,
-    comment: str | None = None,
+    comment: Annotated[str | None, Form()] = None,
     update_file_service: UpdateFileService = Depends(
         Provide[Container.update_file_service]
     ),

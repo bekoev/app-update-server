@@ -48,7 +48,8 @@ class UpdateFileService:
         try:
             await self.blob_repository.delete(object_id)
         except FileNotFoundError:
-            raise ApiNotFoundError
+            pass
+        await self.file_infos.delete(object_id)
 
     async def _ensure_capacity(self) -> None:
         current_files = await self.file_infos.get_all()
