@@ -33,7 +33,7 @@ class UpdateManifestService:
                 "Automatic version downgrade is not supported, remove current manifest explicitly"
             )
 
-    async def get(self, requester_version: str | None) -> UpdateManifest:
+    async def get(self, requester_version: str) -> UpdateManifest:
         try:
             requester_version_obj = Version(requester_version)
         except InvalidVersion:
