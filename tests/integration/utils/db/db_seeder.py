@@ -16,8 +16,8 @@ class DbTestDataHandler:
     def __init__(
         self,
         client_db: PostgresPlugin,
-        entity_type=None,
-        entity_data: list[dict] = None,
+        entity_type: Any | None = None,
+        entity_data: list[dict] | None = None,
     ):
         """Initialize the data handler.
 
@@ -26,7 +26,7 @@ class DbTestDataHandler:
         self._engine = client_db.engine
         self._db_session = client_db.session
         self._entity_info: list[EntityInfo] = []
-        if entity_type is not None:
+        if entity_type is not None and entity_data is not None:
             self._entity_info.append(EntityInfo(entity_type, entity_data))
 
     def add_entity_info(self, entity_type, entity_data: list[dict]):

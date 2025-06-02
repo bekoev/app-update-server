@@ -19,6 +19,7 @@ services:
       - file_storage:/persistent/file_storage
     ports:
       - 8080:8080
+
   postgresql:
     image: postgres
     container_name: app-update-service-postgresql

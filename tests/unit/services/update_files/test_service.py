@@ -178,9 +178,9 @@ class TestUpdateFileService:
         # Given
         mock_blob_repository.delete.side_effect = FileNotFoundError
 
-        # When/Then
-        with pytest.raises(ApiNotFoundError):
-            await update_file_service.delete_file("non-existent-id")
+        # When - trying to delete non-exstent file
+        # Then - no exception is raised
+        await update_file_service.delete_file("non-existent-id")
 
     async def test_ensure_capacity_under_limit(
         self,

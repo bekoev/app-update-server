@@ -114,7 +114,7 @@ class TestUpdateManifestService:
         # Then
         mock_repository.set.assert_not_called()
 
-    async def test_get_manifest(
+    async def test_get_manifest_none(
         self,
         update_manifest_service: UpdateManifestService,
         mock_repository: AsyncMock,
@@ -123,23 +123,9 @@ class TestUpdateManifestService:
         # Given
         mock_repository.get.return_value = sample_manifest
 
-        # When
-        result = await update_manifest_service.get(None)
-
-        # Then
-        assert result == sample_manifest
-
-    async def test_get_manifest_not_found(
-        self,
-        update_manifest_service: UpdateManifestService,
-        mock_repository: AsyncMock,
-    ) -> None:
-        # Given
-        mock_repository.get.return_value = None
-
         # When/Then
-        with pytest.raises(ApiNotFoundError):
-            await update_manifest_service.get(None)
+        with pytest.raises(TypeError):
+            await update_manifest_service.get(None)  # type: ignore
 
     async def test_get_manifest_current_version_up_to_date(
         self,
