@@ -15,8 +15,11 @@ services:
       - postgres_user=user
       - postgres_password=password
       - postgres_db=test
+      - logger_file_max_size=50000
+      - logger_file_backup_count=10
     volumes:
       - file_storage:/persistent/file_storage
+      - log_storage:/persistent/log_storage
     ports:
       - 8080:8080
 
@@ -43,3 +46,4 @@ services:
 
 volumes:
   file_storage:
+  log_storage:

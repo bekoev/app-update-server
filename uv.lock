@@ -80,7 +80,6 @@ dependencies = [
     { name = "async-sqlalchemy" },
     { name = "dependency-injector" },
     { name = "fastapi" },
-    { name = "graypy" },
     { name = "greenlet" },
     { name = "httpx" },
     { name = "loguru" },
@@ -111,7 +110,6 @@ requires-dist = [
     { name = "async-sqlalchemy" },
     { name = "dependency-injector" },
     { name = "fastapi" },
-    { name = "graypy" },
     { name = "greenlet" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "loguru" },
@@ -249,15 +247,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/0a/10/c23352565a6544bdc5353e0b15fc1c563352101f30e24bf500207a54df9a/filelock-3.18.0.tar.gz", hash = "sha256:adbc88eabb99d2fec8c9c1b229b171f18afa655400173ddc653d5d01501fb9f2", size = 18075 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4d/36/2a115987e2d8c300a974597416d9de88f2444426de9571f4b59b2cca3acc/filelock-3.18.0-py3-none-any.whl", hash = "sha256:c401f4f8377c4464e6db25fff06205fd89bdd83b65eb0488ed1b160f780e21de", size = 16215 },
-]
-
-[[package]]
-name = "graypy"
-version = "2.1.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8c/13/9fd9d88a16d4333b784c0d24daf90cf93bac63c7ab031dc72d9425b7f106/graypy-2.1.0.tar.gz", hash = "sha256:fd8dc4a721de1278576d92db10ac015e99b4e480cf1b18892e79429fd9236e16", size = 24187 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/80/d9de7f4747ab54aad84c479d2c3dad9171de5a7f832ce4229bcef1f472ce/graypy-2.1.0-py2.py3-none-any.whl", hash = "sha256:5df0102ed52fdaa24dd579bc1e4904480c2c9bbb98917a0b3241ecf510c94207", size = 29907 },
 ]
 
 [[package]]
