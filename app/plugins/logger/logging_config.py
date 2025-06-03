@@ -1,14 +1,17 @@
+from __future__ import annotations
+
 import logging
 import sys
+from collections.abc import Generator
 from logging.config import dictConfig
 from logging.handlers import QueueListener
+from pathlib import Path
 from queue import Queue
 
 from app.settings import MainSettings
 
 
-def init_logging(app_settings: MainSettings):
-    config = LoggingConfiguration(app_settings)
+def init_logging(config: LoggingConfiguration) -> Generator[logging.Logger, None, None]:
     config.apply_configuration()
     for listener in config.get_logging_listeners():
         listener.start()
@@ -31,21 +34,13 @@ class LoggingConfiguration:
     def apply_configuration(self) -> None:
         """Apply the configuration to standard logging facility."""
 
-        dictConfig(self._get_config_dict())
+        dictConfig(self.get_config_dict())
 
         # Setup handlers that may block, as per
         #   https://docs.python.org/3/howto/logging-cookbook.html#dealing-with-handlers-that-block
-        use_graylog = all(
-            [
-                self._app_settings.logger.graylog_host,
-                self._app_settings.logger.graylog_port,
-            ]
-        )
-        if (
-            use_graylog
-            and (graylog_handler := logging.getHandlerByName("graylog")) is not None
-        ):
-            listener_handlers = (graylog_handler,)
+        file_handler = logging.getHandlerByName("file_handler")
+        if file_handler is not None:
+            listener_handlers = (file_handler,)
             self._logging_listener = QueueListener(
                 self._logging_queue, *listener_handlers
             )
@@ -54,8 +49,8 @@ class LoggingConfiguration:
         """Get listeners that require starting and stopping."""
         return [self._logging_listener] if self._logging_listener else []
 
-    def _get_config_dict(self) -> dict:
-        logging_lvl: int = logging.getLevelName(self._app_settings.logger.level)
+    def get_config_dict(self) -> dict:
+        logging_lvl = self._app_settings.logger.level
         use_dev_logger = self._app_settings.logger.developer_logger
         console_logger = "console_loguru" if use_dev_logger else "console_json"
 
@@ -72,17 +67,17 @@ class LoggingConfiguration:
                 "uvicorn": {
                     "level": logging_lvl,
                     "propagate": False,
-                    "handlers": [console_logger],
+                    "handlers": [console_logger, "queue_handler"],
                 },
                 "uvicorn.access": {
                     "level": logging_lvl,
                     "propagate": False,
-                    "handlers": [console_logger],
+                    "handlers": [console_logger, "queue_handler"],
                 },
                 "uvicorn.errors": {
                     "level": logging_lvl,
                     "propagate": False,
-                    "handlers": [console_logger],
+                    "handlers": [console_logger, "queue_handler"],
                 },
             },
             #
@@ -99,19 +94,25 @@ class LoggingConfiguration:
                     "class": "logging.handlers.QueueHandler",
                     "queue": self._logging_queue,
                 },
-                "graylog": {
-                    "class": "graypy.GELFUDPHandler",
-                    "host": self._app_settings.logger.graylog_host,
-                    "port": self._app_settings.logger.graylog_port,
-                    "extra_fields": True,
-                    "level_names": True,
+                "file_handler": {
+                    "class": "logging.handlers.RotatingFileHandler",
+                    "filename": (
+                        Path(self._app_settings.logger.file_storage_path) / "app.log"
+                    ),
+                    "maxBytes": self._app_settings.logger.file_max_size,
+                    "backupCount": self._app_settings.logger.file_backup_count,
+                    "formatter": "plain",
                 },
             },
             #
             "formatters": {
                 "json_formatter": {
                     "()": "app.plugins.logger.utils.jsonFormatter.JsonFormatter",
-                }
+                },
+                "plain": {
+                    "format": "%(asctime)s %(levelname)-8s %(name)-15s %(message)s",
+                    "datefmt": "%Y-%m-%d %H:%M:%S",
+                },
             },
         }
 

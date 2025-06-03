@@ -50,6 +50,8 @@
 * Obtain PosgreSQL connection parameters: host, port, user, password, DB name
 * Arrange file storage for update files with access for uid=1000 gid=1000
     * `sudo chown 1000:1000 /path/to/file_storage`
+* Arrange file storage for log files with access for uid=1000 gid=1000
+    * `sudo chown 1000:1000 /path/to/log_storage`
 * Prepare environment variables:
     * app_host - bind application socket to this host
     * app_port - bind application socket to this port
@@ -58,10 +60,12 @@
     * postgres_user
     * postgres_password
     * postgres_db - DB name
-    * app_api_key - key for accessing API service endpoints
+    * app_api_key - key for accessing API service endpoints (normally one would just generate a new secure key)
     * app_crm_url_base - base URL of CRM (not including /1/validate-token)
+    * logger_file_max_size - rotate log file on this size, bytes, default 0 (rotation is off)
+    * logger_file_backup_count - keep this number of old log files during rotation, default 0 (rotation is off)
 * Run database mirgations passing environment variables:
     * `docker run --env-file .env --rm app-update-service bash -c "alembic upgrade head"`
-* Run the application passing environment variables and mounting file storage to container's `/persistent/file_storage`:
-    * `docker run -d --env-file .env -p 8080:8080 -v /path/to/file_storage:/persistent/file_storage app-update-service`
+* Run the application passing environment variables and mounting the two file storages to container's `/persistent/file_storage` and `/persistent/log_storage`:
+    * `docker run -d --env-file .env -p 8080:8080 -v /path/to/file_storage:/persistent/file_storage -v /path/to/log_storage:/persistent/log_storage app-update-service`
 * For a docker compose example, see docker-compose-deploy-example.yml

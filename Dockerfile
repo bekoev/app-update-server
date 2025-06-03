@@ -9,6 +9,7 @@ RUN uv export --format requirements-txt > dev-requirements.txt
 
 FROM python:3.12-slim AS test
 
+RUN mkdir /persistent && mkdir /persistent/log_storage
 WORKDIR /backend
 COPY --from=build /tmp/dev-requirements.txt /backend/dev-requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /backend/dev-requirements.txt
@@ -24,6 +25,7 @@ ARG GROUP_ID=1000
 
 RUN addgroup --gid $GROUP_ID nonroot && adduser --uid $USER_ID --ingroup nonroot nonroot
 RUN mkdir /persistent && mkdir /persistent/file_storage && chown -R nonroot:nonroot /persistent/file_storage
+RUN mkdir /persistent/log_storage && chown -R nonroot:nonroot /persistent/log_storage
 
 WORKDIR /backend
 

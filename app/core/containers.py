@@ -3,7 +3,7 @@ from typing import Set
 from dependency_injector import containers, providers
 
 from app.plugins.http.http_client import http_client_session
-from app.plugins.logger.logging_config import init_logging
+from app.plugins.logger.logging_config import LoggingConfiguration, init_logging
 from app.plugins.logger.settings import LoggerSettings
 from app.plugins.postgres.plugin import PostgresPlugin
 from app.plugins.postgres.settings import PostgresSettings
@@ -25,9 +25,13 @@ class Container(containers.DeclarativeContainer):
         app=AppSettings(),
     )
 
+    logging_config = providers.Singleton(
+        LoggingConfiguration,
+        app_settings=config.provided,
+    )
     logger = providers.Resource(
         init_logging,
-        app_settings=config.provided,
+        config=logging_config,
     )
     db = providers.Singleton(
         PostgresPlugin,
