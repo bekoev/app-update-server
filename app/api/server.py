@@ -8,6 +8,7 @@ from app.api.exceptions import add_exceptions
 from app.api.routers import add_routers
 from app.core.containers import Container, provide_wire
 from app.plugins.health_check import create_health_router
+from app.settings import get_app_version
 
 
 @asynccontextmanager
@@ -31,6 +32,7 @@ def create_app(container: Container):
         lifespan=lifespan,
         root_path=app_config.root_path,
         openapi_url=app_config.openapi_url,
+        version=get_app_version(),
     )
 
     app.add_middleware(
@@ -49,7 +51,7 @@ def create_app(container: Container):
     hc_router = create_health_router(
         title=app_config.name,
         health_checks=[container.db()],
-        version=app_config.version,
+        version=get_app_version(),
     )
     app.include_router(hc_router, prefix="/service")
     app.state.container = container
