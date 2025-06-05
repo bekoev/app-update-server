@@ -65,7 +65,7 @@ async def upload_update_file(
 
 
 @update_files_router.delete(
-    "/update-files/{id}",
+    "/service/update-files/{id}",
     tags=["service-operations"],
     dependencies=[Depends(check_access_by_api_key)],
     status_code=status.HTTP_204_NO_CONTENT,
