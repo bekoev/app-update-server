@@ -1,14 +1,16 @@
+from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.plugins.logger.settings import LoggerSettings
 from app.plugins.postgres.settings import PostgresSettings
+from app.version import version as app_version
 
 
 class AppSettings(BaseSettings):
     """General settings app"""
 
     name: str = "app-update-service"
-    version: str = "0.0.0"
     host: str = "localhost"
     port: int = 8080
     reloader: bool = False
@@ -37,3 +39,8 @@ class MainSettings:
         self.db = db
         self.logger = logger
         self.app = app
+
+
+@lru_cache
+def get_app_version() -> str:
+    return str(app_version)

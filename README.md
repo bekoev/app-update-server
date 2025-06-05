@@ -32,6 +32,11 @@
 * `ruff check`
 * `mypy app`
 
+### API docs
+* OpenAPI specification: /openapi.json
+* Swagger UI: /docs
+* ReDoc: /redoc
+
 # Deployment
 
 ## Linting and unit testing
