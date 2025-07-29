@@ -1,4 +1,7 @@
-# TGClient Update Service Backend App
+# Application for serving updates to other (desktop) applications
+
+## Time cost
+37 man-hours
 
 ## Dev environment
 
