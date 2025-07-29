@@ -1,5 +1,18 @@
 # Application for serving updates to other (desktop) applications
 
+## Requirements
+
+* Usage scenarios:
+    * Service team users: upload update binary files and publish update manifests
+    * Desktop applications: check update manifest, download the update if necessary
+* Load expectations:
+    * Desktop applications are running on tens to hundreds workplaces
+    * Every application checks for an update once per 10 minutes
+    * A new version gets published on a bi-weekly or a monthly basis
+* User management:
+    * Not required
+    * Application key + whitelists is enough for the service team
+
 ## Time cost
 37 man-hours
 
